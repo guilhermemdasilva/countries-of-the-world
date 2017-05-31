@@ -1,11 +1,11 @@
 package com.guilherme_silva.countriesoftheworld;
 
+import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,8 +22,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String ENDPOINT = "https://restcountries.eu/rest/v2/" +
-        "all?fields=name;nativeName;alpha2Code;alpha3Code;region;" +
-        "subregion;capital;demonym;area;population";
+        "all?fields=name;alpha2Code;subregion;capital;area;population";
 
     private RequestQueue requestQueue;
     private Gson gson;
@@ -56,7 +55,17 @@ public class MainActivity extends AppCompatActivity {
             CountryAdapter countryAdapter = new CountryAdapter(countries, new CountryAdapter.OnCountryItemClicked() {
                 @Override
                 public void OnCountryInteraction(CountryInfo countryInfo) {
-                    Toast.makeText(getApplicationContext(), countryInfo.capital, Toast.LENGTH_LONG).show();
+                    FragmentManager fm = getFragmentManager();
+                    Bundle args = new Bundle();
+                    CountryDialogFragment countryDialogFragment = new CountryDialogFragment ();
+                    args.putString("name", countryInfo.name);
+                    args.putString("alpha2Code", countryInfo.alpha2Code);
+                    args.putString("capital", countryInfo.capital);
+                    args.putString("subregion", countryInfo.subregion);
+                    args.putInt("population", countryInfo.population);
+                    args.putFloat("area", countryInfo.area);
+                    countryDialogFragment.setArguments(args);
+                    countryDialogFragment.show(fm, "Country Dialog Fragment");
                 }
             });
             recyclerView.setAdapter(countryAdapter);

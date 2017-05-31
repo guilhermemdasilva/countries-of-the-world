@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Countries of the World</string>
     <string name="search_hint">Search Country</string>
+    <string name="button_dismiss">Dismiss</string>
+    <string name="capital_field">Capital:</string>
+    <string name="subregion_field">Subregion:</string>
+    <string name="population_field">Population:</string>
+    <string name="area_field">Area (km²):</string>
 </resources>

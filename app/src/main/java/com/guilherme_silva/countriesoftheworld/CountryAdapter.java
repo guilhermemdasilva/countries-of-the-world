@@ -30,7 +30,6 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
         CountryInfo country = countryList.get(index);
         if(CountryCodeHelper.getDrawableResource(country.alpha2Code.toLowerCase()) != 0) {
             countryViewHolder.mItem = countryList.get(index);
-            countryViewHolder.tvCommonName.setText(country.name);
             countryViewHolder.ivFlag.setImageResource(CountryCodeHelper
                     .getDrawableResource(country.alpha2Code.toLowerCase()));
             countryViewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -53,14 +52,12 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
         public View mView;
         public CountryInfo mItem;
         protected ImageView ivFlag;
-        protected TextView tvCommonName;
         public CardView cardView;
 
         public CountryViewHolder(View view) {
             super(view);
             mView = view;
             ivFlag = (ImageView) view.findViewById(R.id.flag_image);
-            tvCommonName = (TextView) view.findViewById(R.id.country_name);
             cardView = (CardView) view.findViewById(R.id.card_view);
         }
     }
