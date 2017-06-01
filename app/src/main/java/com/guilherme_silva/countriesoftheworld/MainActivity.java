@@ -175,7 +175,16 @@ public class MainActivity extends AppCompatActivity {
     private final Response.ErrorListener onCountriesError = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e("MainActivity", error.toString());
+            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+            alertDialog.setTitle(getResources().getString(R.string.error_title));
+            alertDialog.setMessage(getResources().getString(R.string.error_msg));
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.ok_button),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
         }
     };
 }
