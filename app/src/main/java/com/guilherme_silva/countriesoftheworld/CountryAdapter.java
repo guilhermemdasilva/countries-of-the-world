@@ -31,16 +31,20 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
     @Override
     public void onBindViewHolder(final CountryViewHolder countryViewHolder, int index) {
         CountryInfo country = countryList.get(index);
+        countryViewHolder.mItem = countryList.get(index);
+        countryViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCountryItemClicked.OnCountryInteraction(countryViewHolder.mItem);
+            }
+        });
         if(CountryCodeHelper.getDrawableResource(country.alpha2Code.toLowerCase()) != 0) {
-            countryViewHolder.mItem = countryList.get(index);
             countryViewHolder.ivFlag.setImageResource(CountryCodeHelper
                     .getDrawableResource(country.alpha2Code.toLowerCase()));
-            countryViewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onCountryItemClicked.OnCountryInteraction(countryViewHolder.mItem);
-                }
-            });
+        } else {
+            //if there is no flag, use UN flag
+            countryViewHolder.ivFlag.setImageResource(CountryCodeHelper
+                    .getDrawableResource("un"));
         }
     }
 

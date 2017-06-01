@@ -446,6 +446,8 @@ public class CountryCodeHelper {
                 return R.drawable.ua;
             case "ug":
                 return R.drawable.ug;
+            case "un":
+                return R.drawable.un;
             case "us":
                 return R.drawable.us;
             case "uy":
@@ -476,7 +478,8 @@ public class CountryCodeHelper {
                 return R.drawable.zm;
             case "zw":
                 return R.drawable.zw;
+            default:
+                return 0;
         }
-        return 0;
     }
 }
