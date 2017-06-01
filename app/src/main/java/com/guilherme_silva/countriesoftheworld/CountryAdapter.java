@@ -1,12 +1,12 @@
 package com.guilherme_silva.countriesoftheworld;
 
+import android.graphics.Rect;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -59,6 +59,27 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
             mView = view;
             ivFlag = (ImageView) view.findViewById(R.id.flag_image);
             cardView = (CardView) view.findViewById(R.id.card_view);
+        }
+    }
+
+    static class BottomDecoration extends RecyclerView.ItemDecoration {
+        private int mBottom;
+
+        public BottomDecoration(int bottom) {
+            mBottom = bottom;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            int itemCount = state.getItemCount();
+            int position = parent.getChildAdapterPosition(view);
+            if (itemCount > 0 && position == itemCount - 1) {
+                outRect.set(0, 0, 0, mBottom);
+            } else {
+                outRect.set(0, 0, 0, 0);
+            }
+
         }
     }
 

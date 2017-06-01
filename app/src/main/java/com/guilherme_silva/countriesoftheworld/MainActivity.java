@@ -1,11 +1,18 @@
 package com.guilherme_silva.countriesoftheworld;
 
 import android.app.FragmentManager;
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -16,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private Gson gson;
     private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private ArrayList<String> countriesNames = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +44,55 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         recyclerView = (RecyclerView) findViewById(R.id.countries_grid);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         requestQueue = Volley.newRequestQueue(this);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
         fetchCountries();
+        handleIntent(getIntent());
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            intent.putExtra("countriesNames", countriesNames);
+        }
+        super.startActivity(intent);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY).trim();
+            countriesNames = intent.getStringArrayListExtra("countriesNames");
+
+            int index = 0;
+            for (String countryName : countriesNames) {
+                if (countryName.equalsIgnoreCase(query)) {
+                    linearLayoutManager.scrollToPosition(index);
+                    break;
+                }
+                index++;
+            }
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        return true;
     }
 
     private void fetchCountries() {
@@ -52,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onResponse(String response) {
             List<CountryInfo> countries = Arrays.asList(gson.fromJson(response, CountryInfo[].class));
+            for(CountryInfo country : countries) {
+                countriesNames.add(country.name);
+            }
             CountryAdapter countryAdapter = new CountryAdapter(countries, new CountryAdapter.OnCountryItemClicked() {
                 @Override
                 public void OnCountryInteraction(CountryInfo countryInfo) {
@@ -69,6 +124,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             recyclerView.setAdapter(countryAdapter);
+            Point size = new Point();
+            getWindowManager().getDefaultDisplay().getSize(size);
+
+            CountryAdapter.BottomDecoration bottomOffsetDecoration = new CountryAdapter.BottomDecoration(size.y);
+            recyclerView.addItemDecoration(bottomOffsetDecoration);
         }
     };
 
