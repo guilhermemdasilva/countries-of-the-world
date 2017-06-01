@@ -9,7 +9,7 @@
     tools:context="com.guilherme_silva.countriesoftheworld.MainActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/countries_grid"
+        android:id="@+id/countries_list"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -10,32 +10,36 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class CountryDialogFragment extends DialogFragment {
+    @BindView(R.id.tvCountryName) TextView tvCountryName;
+    @BindView(R.id.ivThumbnailFlag) ImageView ivThumbnailFlag;
+    @BindView(R.id.tvCapital) TextView tvCapital;
+    @BindView(R.id.tvSubregion) TextView tvSubregion;
+    @BindView(R.id.tvPopulation) TextView tvPopulation;
+    @BindView(R.id.tvArea) TextView tvArea;
+    @BindView(R.id.btDismiss) Button btDismiss;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_country_dialog, container, false);
-        TextView tvCountryName = (TextView) rootView.findViewById(R.id.tvCountryName);
+        View view = inflater.inflate(R.layout.fragment_country_dialog, container, false);
+        ButterKnife.bind(this, view);
         tvCountryName.setText(getArguments().getString("name"));
-        ImageView ivThumbnailFlag = (ImageView) rootView.findViewById(R.id.ivThumbnailFlag);
         ivThumbnailFlag.setImageResource(CountryCodeHelper
                 .getDrawableResource(getArguments().getString("alpha2Code").toLowerCase()));
-        TextView tvCapital = (TextView) rootView.findViewById(R.id.tvCapital);
         tvCapital.setText(getArguments().getString("capital"));
-        TextView tvSubregion = (TextView) rootView.findViewById(R.id.tvSubregion);
         tvSubregion.setText(getArguments().getString("subregion"));
-        TextView tvPopulation = (TextView) rootView.findViewById(R.id.tvPopulation);
-        tvPopulation.setText(getArguments().getInt("population") + "");
-        TextView tvArea = (TextView) rootView.findViewById(R.id.tvArea);
-        tvArea.setText(getArguments().getFloat("area") + "");
-        Button btDismiss = (Button) rootView.findViewById(R.id.btDismiss);
+        tvPopulation.setText(String.valueOf(getArguments().getInt("population")));
+        tvArea.setText(String.valueOf(getArguments().getFloat("area")));
         btDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
         });
-        return rootView;
+        return view;
     }
 }

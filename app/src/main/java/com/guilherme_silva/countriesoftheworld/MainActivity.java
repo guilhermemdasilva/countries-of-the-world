@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -34,14 +33,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.BindString;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final String ENDPOINT = "https://restcountries.eu/rest/v2/" +
-        "all?fields=name;alpha2Code;subregion;capital;area;population";
+    @BindString(R.string.endpoint_url) String ENDPOINT;
+    @BindString(R.string.permission_title) String PERMISSION_TITLE;
+    @BindString(R.string.permission_msg) String PERMISSION_MSG;
+    @BindString(R.string.ok_button) String OK_BUTTON;
+    @BindString(R.string.error_title) String ERROR_TITLE;
+    @BindString(R.string.error_msg) String ERROR_MSG;
 
     private RequestQueue requestQueue;
     private Gson gson;
-    private RecyclerView recyclerView;
+    @BindView(R.id.countries_list) RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private ArrayList<String> countriesNames = new ArrayList<>();
     private final int PERMISSION_REQUEST_INTERNET = 1;
@@ -50,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        recyclerView = (RecyclerView) findViewById(R.id.countries_grid);
+        ButterKnife.bind(this);
         recyclerView.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -80,9 +87,9 @@ public class MainActivity extends AppCompatActivity {
                     fetchCountries();
                 } else {
                     AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                    alertDialog.setTitle(getResources().getString(R.string.permission_title));
-                    alertDialog.setMessage(getResources().getString(R.string.permission_msg));
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.ok_button),
+                    alertDialog.setTitle(PERMISSION_TITLE);
+                    alertDialog.setMessage(PERMISSION_MSG);
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, OK_BUTTON,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -115,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
             int index = 0;
             for (String countryName : countriesNames) {
-                if (countryName.equalsIgnoreCase(query)) {
+                if (countryName.toLowerCase().contains(query.toLowerCase())) {
                     linearLayoutManager.scrollToPosition(index);
                     break;
                 }
@@ -176,9 +183,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onErrorResponse(VolleyError error) {
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-            alertDialog.setTitle(getResources().getString(R.string.error_title));
-            alertDialog.setMessage(getResources().getString(R.string.error_msg));
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.ok_button),
+            alertDialog.setTitle(ERROR_TITLE);
+            alertDialog.setMessage(ERROR_MSG);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, OK_BUTTON,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();

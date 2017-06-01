@@ -11,4 +11,5 @@
     <string name="ok_button">OK</string>
     <string name="error_title">Failed to Retrieve Data</string>
     <string name="error_msg">Unable to resolve host. No address associated with hostname.</string>
+    <string name="endpoint_url">https://restcountries.eu/rest/v2/all?fields=name;alpha2Code;subregion;capital;area;population</string>
 </resources>

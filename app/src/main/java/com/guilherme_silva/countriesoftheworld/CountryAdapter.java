@@ -10,6 +10,9 @@ import android.widget.ImageView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryViewHolder> {
 
     private List<CountryInfo> countryList;
@@ -51,14 +54,13 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
     public static class CountryViewHolder extends RecyclerView.ViewHolder {
         public View mView;
         public CountryInfo mItem;
-        protected ImageView ivFlag;
-        public CardView cardView;
+        @BindView(R.id.flag_image) protected ImageView ivFlag;
+        @BindView(R.id.card_view) public CardView cardView;
 
         public CountryViewHolder(View view) {
             super(view);
+            ButterKnife.bind(this, view);
             mView = view;
-            ivFlag = (ImageView) view.findViewById(R.id.flag_image);
-            cardView = (CardView) view.findViewById(R.id.card_view);
         }
     }
 
