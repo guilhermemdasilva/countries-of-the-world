@@ -1,8 +1,10 @@
-package com.guilherme_silva.countriesoftheworld;
+package com.guilherme_silva.countriesoftheworld.utils;
+
+import com.guilherme_silva.countriesoftheworld.R;
 
 public class CountryCodeHelper {
 
-    public static int getDrawableResource(String ISOCodeAlpha2) {
+    private static int getDrawableResource(String ISOCodeAlpha2) {
         switch (ISOCodeAlpha2) {
             case "ad":
                 return R.drawable.ad;
@@ -480,6 +482,16 @@ public class CountryCodeHelper {
                 return R.drawable.zw;
             default:
                 return 0;
+        }
+    }
+
+    public static int getFlagImageResource(String alpha2Code) {
+        //if there is no flag, return UN flag resource
+        final int resourceReference = getDrawableResource(alpha2Code);
+        if (resourceReference != 0) {
+            return resourceReference;
+        } else {
+            return getDrawableResource("un");
         }
     }
 }

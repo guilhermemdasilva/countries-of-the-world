@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
     android:background="@android:color/darker_gray"
-    tools:context="com.guilherme_silva.countriesoftheworld.MainActivity">
+    tools:context="com.guilherme_silva.countriesoftheworld.activities.MainActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/countries_list"
+        android:id="@+id/rvCountriesList"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         tools:layout_constraintTop_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginTop="50dp" />
+        tools:layout_constraintLeft_creator="1">
+    </android.support.v7.widget.RecyclerView>
 
 </android.support.constraint.ConstraintLayout>

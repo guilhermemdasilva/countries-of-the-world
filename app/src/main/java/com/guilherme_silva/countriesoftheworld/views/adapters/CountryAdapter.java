@@ -1,4 +1,4 @@
-package com.guilherme_silva.countriesoftheworld;
+package com.guilherme_silva.countriesoftheworld.views.adapters;
 
 import android.graphics.Rect;
 import android.support.v7.widget.CardView;
@@ -8,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.guilherme_silva.countriesoftheworld.utils.CountryCodeHelper;
+import com.guilherme_silva.countriesoftheworld.models.Country;
+import com.guilherme_silva.countriesoftheworld.R;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -15,10 +19,10 @@ import butterknife.ButterKnife;
 
 public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryViewHolder> {
 
-    private List<CountryInfo> countryList;
+    private List<Country> countryList;
     private OnCountryItemClicked onCountryItemClicked;
 
-    public CountryAdapter(List<CountryInfo> countryList, OnCountryItemClicked onCountryItemClicked) {
+    public CountryAdapter(List<Country> countryList, OnCountryItemClicked onCountryItemClicked) {
         this.countryList = countryList;
         this.onCountryItemClicked = onCountryItemClicked;
     }
@@ -30,7 +34,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
 
     @Override
     public void onBindViewHolder(final CountryViewHolder countryViewHolder, int index) {
-        CountryInfo country = countryList.get(index);
+        Country country = countryList.get(index);
         countryViewHolder.mItem = countryList.get(index);
         countryViewHolder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,26 +42,23 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
                 onCountryItemClicked.OnCountryInteraction(countryViewHolder.mItem);
             }
         });
-        if(CountryCodeHelper.getDrawableResource(country.alpha2Code.toLowerCase()) != 0) {
-            countryViewHolder.ivFlag.setImageResource(CountryCodeHelper
-                    .getDrawableResource(country.alpha2Code.toLowerCase()));
-        } else {
-            //if there is no flag, use UN flag
-            countryViewHolder.ivFlag.setImageResource(CountryCodeHelper
-                    .getDrawableResource("un"));
-        }
+        final String alpha2Code =
+                (null != country.getAlpha2Code()) ?
+                country.getAlpha2Code().toLowerCase() : "";
+        final int resourceReference = CountryCodeHelper.getFlagImageResource(alpha2Code);
+        countryViewHolder.ivFlag.setImageResource(resourceReference);
     }
 
     @Override
     public CountryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.card_layout, parent, false);
+                inflate(R.layout.layout_card, parent, false);
         return new CountryViewHolder(item);
     }
 
     public static class CountryViewHolder extends RecyclerView.ViewHolder {
         public View mView;
-        public CountryInfo mItem;
+        public Country mItem;
         @BindView(R.id.flag_image) protected ImageView ivFlag;
         @BindView(R.id.card_view) public CardView cardView;
 
@@ -68,7 +69,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
         }
     }
 
-    static class BottomDecoration extends RecyclerView.ItemDecoration {
+    public static class BottomDecoration extends RecyclerView.ItemDecoration {
         private int mBottom;
 
         public BottomDecoration(int bottom) {
@@ -90,6 +91,6 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
     }
 
     public interface OnCountryItemClicked {
-        void OnCountryInteraction(CountryInfo countryInfo);
+        void OnCountryInteraction(Country countryInfo);
     }
 }

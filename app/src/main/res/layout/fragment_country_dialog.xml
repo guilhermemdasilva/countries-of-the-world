@@ -24,10 +24,6 @@
             android:layout_marginLeft="20dp" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -51,7 +47,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/subregion_field"/>
+            android:text="@string/field_subregion"/>
 
         <TextView
             android:id="@+id/tvSubregion"
@@ -67,7 +63,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/population_field"/>
+            android:text="@string/field_population"/>
 
         <TextView
             android:id="@+id/tvPopulation"
@@ -83,7 +79,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/area_field"/>
+            android:text="@string/field_area"/>
 
         <TextView
             android:id="@+id/tvArea"
@@ -96,6 +92,6 @@
         android:id="@+id/btDismiss"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_dismiss" />
+        android:text="@string/button_label_dismiss" />
 
 </LinearLayout>
