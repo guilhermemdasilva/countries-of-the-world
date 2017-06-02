@@ -4,7 +4,7 @@ import com.guilherme_silva.countriesoftheworld.R;
 
 public class CountryCodeHelper {
 
-    private static int getDrawableResource(String ISOCodeAlpha2) {
+    public static int getDrawableResource(String ISOCodeAlpha2) {
         switch (ISOCodeAlpha2) {
             case "ad":
                 return R.drawable.ad;
