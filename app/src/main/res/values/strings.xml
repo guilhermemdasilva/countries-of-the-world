@@ -11,5 +11,6 @@
     <string name="permission_msg">Internet Permission is NOT Granted</string>
     <string name="error_title">Failed to Retrieve Data</string>
     <string name="error_msg">Unable to resolve host. No address associated with hostname.</string>
-    <string name="url_countries_endpoint">https://restcountries.eu/rest/v2/all?fields=name;alpha2Code;subregion;capital;area;population</string>
+    <string name="url_countries_endpoint">https://restcountries.eu/rest/v2/all?fields=name;alpha2Code;subregion;capital;area;population;latlng</string>
+    <string name="access_token">pk.eyJ1IjoiZ3VpbGhlcm1lLXNpbHZhIiwiYSI6ImNqM2pybWN6bjAwbW8zM3A2M2Nkc25nc3YifQ.4VhAU5dyQtPyCUtanWOaNA</string>
 </resources>
