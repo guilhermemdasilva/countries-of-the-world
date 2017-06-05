@@ -13,17 +13,21 @@ import com.guilherme_silva.countriesoftheworld.models.Country;
 import com.guilherme_silva.countriesoftheworld.views.adapters.CountryAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ClientAsyncTask extends AsyncTask<String, String, List<Country>> {
     private Context context;
     private RecyclerView recyclerView;
     private ArrayList<String> countriesNames;
+    private List<List<Double>> countriesLatLng;
 
-    public ClientAsyncTask(Context context, RecyclerView recyclerView, ArrayList<String> countriesNames) {
+    public ClientAsyncTask(Context context, RecyclerView recyclerView,
+                           ArrayList<String> countriesNames, List<List<Double>> countriesLatLng) {
         this.context = context;
         this.recyclerView = recyclerView;
         this.countriesNames = countriesNames;
+        this.countriesLatLng = countriesLatLng;
     }
 
     @Override
@@ -36,6 +40,11 @@ public class ClientAsyncTask extends AsyncTask<String, String, List<Country>> {
     protected void onPostExecute(List<Country> countries) {
         for(Country country : countries) {
             countriesNames.add(country.getName());
+            if(country.getLatlng() != null && country.getLatlng().size() == 2) {
+                countriesLatLng.add(country.getLatlng());
+            } else {
+                countriesLatLng.add(new ArrayList<>(Arrays.asList(0.0, 0.0)));
+            }
         }
         recyclerView.setAdapter(new CountryAdapter(countries, new CountryAdapter.OnCountryItemClicked() {
             @Override

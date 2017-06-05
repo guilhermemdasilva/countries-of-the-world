@@ -1,5 +1,7 @@
 package com.guilherme_silva.countriesoftheworld.models;
 
+import java.util.List;
+
 public class Country {
     private String name;
     private String alpha2Code;
@@ -7,6 +9,7 @@ public class Country {
     private String capital;
     private float area;
     private int population;
+    private List<Double> latlng;
 
     public String getName() {
         return name;
@@ -30,5 +33,9 @@ public class Country {
 
     public int getPopulation() {
         return population;
+    }
+
+    public List<Double> getLatlng() {
+        return latlng;
     }
 }

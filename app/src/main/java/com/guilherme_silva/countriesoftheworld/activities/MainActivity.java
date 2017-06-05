@@ -20,8 +20,16 @@ import android.view.MenuInflater;
 
 import com.guilherme_silva.countriesoftheworld.R;
 import com.guilherme_silva.countriesoftheworld.network.ClientAsyncTask;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -33,24 +41,70 @@ public class MainActivity extends AppCompatActivity {
     @BindString(R.string.button_label_ok) String OK_BUTTON;
 
     @BindView(R.id.rvCountriesList) RecyclerView recyclerView;
+    @BindView(R.id.mapview) MapView mapView;
 
     private LinearLayoutManager linearLayoutManager;
     private final int PERMISSION_REQUEST_INTERNET = 1;
     private ArrayList<String> countriesNames = new ArrayList<>();
+    private List<List<Double>> countriesLatLng = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Mapbox.getInstance(this, getString(R.string.access_token));
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mapView.onCreate(savedInstanceState);
         initializeLinearLayoutManager();
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         handlePermissions();
         if (arePermissionsGranted()) {
-           new ClientAsyncTask(this, recyclerView, countriesNames).execute();
+           new ClientAsyncTask(this, recyclerView, countriesNames, countriesLatLng).execute();
         }
         handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
     }
 
     private void handlePermissions() {
@@ -76,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         switch(requestCode) {
             case PERMISSION_REQUEST_INTERNET:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    new ClientAsyncTask(this, recyclerView, countriesNames).execute();
+                    new ClientAsyncTask(this, recyclerView, countriesNames, countriesLatLng).execute();
                 } else {
                     AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                     alertDialog.setTitle(PERMISSION_TITLE);
@@ -96,7 +150,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void startActivity(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            intent.putExtra("countriesNames", countriesNames);
+            final String query = intent.getStringExtra(SearchManager.QUERY).trim();
+            int index;
+            for (index = 0;
+                 index < countriesNames.size() &&
+                         !countriesNames.get(index).toLowerCase().contains(query.toLowerCase());
+                 index++);
+            if (index == countriesNames.size()) index = 0;
+            intent.putExtra("index", index);
+            intent.putExtra("latitude", countriesLatLng.get(index).get(0));
+            intent.putExtra("longitude", countriesLatLng.get(index).get(1));
         }
         super.startActivity(intent);
     }
@@ -109,16 +172,30 @@ public class MainActivity extends AppCompatActivity {
     private void handleIntent(Intent intent) {
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            final String query = intent.getStringExtra(SearchManager.QUERY).trim();
-            ArrayList<String> countriesNames = intent.getStringArrayListExtra("countriesNames");
-            int index;
-            for (index = 0;
-                 index < countriesNames.size() &&
-                    !countriesNames.get(index).toLowerCase().contains(query.toLowerCase());
-                 index++);
-            if (index == countriesNames.size()) index = 0;
+            final int index = intent.getIntExtra("index", 0);
             linearLayoutManager.scrollToPosition(index);
+
+            final double latitude = intent.getDoubleExtra("latitude", 0.0);
+            final double longitude = intent.getDoubleExtra("longitude", 0.0);
+            drawMarker(new LatLng(latitude, longitude));
         }
+    }
+
+    private void drawMarker(final LatLng latlng) {
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(MapboxMap mapboxMap) {
+                mapboxMap.clear();
+                MarkerViewOptions markerViewOptions = new MarkerViewOptions()
+                        .position(latlng);
+
+                mapboxMap.addMarker(markerViewOptions);
+                mapboxMap.setCameraPosition(new CameraPosition.Builder()
+                        .target(latlng)
+                        .zoom(2)
+                        .build());
+            }
+        });
     }
 
     @Override
